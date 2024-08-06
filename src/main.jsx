@@ -3,26 +3,15 @@ import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { legacy_createStore as createStore } from 'redux'
 import App from './App.jsx'
-import { noteReducer } from './reducer.js'
+import { noteReducer } from './reducers/noteReducer.js'
+import { filterReducer } from './reducers/filterReducer.js'
+import { combineReducers } from 'redux'
 
-const store = createStore(noteReducer)
-
-store.dispatch({
-  type: 'NEW_NOTE',
-  payload: {
-    content: 'the app state is in redux store',
-    important: true,
-    id: 1,
-  },
+const reducer = combineReducers({
+  notes: noteReducer,
+  filter: filterReducer,
 })
-store.dispatch({
-  type: 'NEW_NOTE',
-  payload: {
-    content: 'state changes are made with actions',
-    important: false,
-    id: 2,
-  },
-})
+const store = createStore(reducer)
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

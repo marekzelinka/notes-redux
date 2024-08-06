@@ -1,17 +1,27 @@
 /* eslint-disable react/prop-types */
 
 import { useDispatch, useSelector } from 'react-redux'
-import { toggleImportance } from '../reducer.js'
+import { toggleNoteImportance } from '../reducers/noteReducer.js'
 
 export function NoteList() {
-  const notes = useSelector((state) => state)
+  const notes = useSelector(({ notes, filter }) => {
+    if (filter === 'ALL') {
+      return notes
+    }
 
-  return (
+    return notes.filter((note) =>
+      filter === 'IMPORTANT' ? note.important : !note.important,
+    )
+  })
+
+  return notes.length ? (
     <ul>
       {notes.map((note) => (
         <NoteItem key={note.id} note={note} />
       ))}
     </ul>
+  ) : (
+    <em>No notes for selected filter</em>
   )
 }
 
@@ -29,7 +39,7 @@ function ToggleNoteImportance({ note }) {
   const label = note.important ? 'make not important' : 'make important'
 
   function handleClick() {
-    dispatch(toggleImportance(note.id))
+    dispatch(toggleNoteImportance(note.id))
   }
 
   return <button onClick={handleClick}>{label}</button>

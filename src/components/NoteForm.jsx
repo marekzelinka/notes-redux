@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-import { newNote } from '../reducer'
+import { newNote } from '../reducers/noteReducer.js'
 
 export function NoteForm() {
   const dispatch = useDispatch()
