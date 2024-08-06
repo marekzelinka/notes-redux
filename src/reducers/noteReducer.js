@@ -1,25 +1,10 @@
-import { createSlice, current } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
+import { createNote, getAllNotes, updateNote } from '../services/notes.js'
 
 const noteSlice = createSlice({
   name: 'notes',
   initialState: [],
   reducers: {
-    addNote: (state, action) => {
-      state.push({
-        content: action.payload,
-        important: false,
-        id: generateId(),
-      })
-    },
-    toggleNoteImportance: (state, action) => {
-      console.log('current state', current(state))
-
-      return state.map((note) =>
-        note.id !== action.payload
-          ? note
-          : { ...note, important: !note.important },
-      )
-    },
     appendNote: (state, action) => {
       state.push(action.payload)
     },
@@ -36,9 +21,32 @@ const noteSlice = createSlice({
 
 export const {
   reducer: noteReducer,
-  actions: { addNote, toggleNoteImportance, appendNote, setNote, setNotes },
+  actions: { appendNote, setNote, setNotes },
 } = noteSlice
 
-function generateId() {
-  return Math.floor(Math.random() * 1_000_000)
+export function initializeNotes() {
+  return async (dispatch) => {
+    const notes = await getAllNotes()
+    dispatch(setNotes(notes))
+  }
+}
+
+export function addNote(content) {
+  return async (dispatch) => {
+    const note = await createNote(content)
+    dispatch(appendNote(note))
+  }
+}
+
+export function toggleNoteImportance(id) {
+  return async (dispatch, getState) => {
+    const { notes } = getState()
+
+    const note = notes.find((note) => note.id === id)
+    const updatedNote = await updateNote(note.id, {
+      ...note,
+      important: !note.important,
+    })
+    dispatch(setNote(updatedNote))
+  }
 }
