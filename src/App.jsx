@@ -1,9 +1,12 @@
 /* eslint-disable react/prop-types */
 
+import { useDispatch, useSelector } from 'react-redux'
 import { newNote, toggleImportance } from './reducer'
 
-function App({ store }) {
-  const notes = store.getState()
+function App() {
+  const dispatch = useDispatch()
+
+  const notes = useSelector((state) => state)
 
   return (
     <>
@@ -15,7 +18,7 @@ function App({ store }) {
           const formData = new FormData(form)
 
           const content = formData.get('content')?.toString()
-          store.dispatch(newNote(content))
+          dispatch(newNote(content))
 
           form.reset()
           form.elements.content?.focus()
@@ -28,7 +31,7 @@ function App({ store }) {
         {notes.map((note) => (
           <li key={note.id}>
             {note.content}{' '}
-            <button onClick={() => store.dispatch(toggleImportance(note.id))}>
+            <button onClick={() => dispatch(toggleImportance(note.id))}>
               {note.important ? 'make not important' : 'make important'}
             </button>
           </li>
