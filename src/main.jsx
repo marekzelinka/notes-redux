@@ -2,18 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { legacy_createStore as createStore } from 'redux'
 import App from './App.jsx'
-
-const noteReducer = (state = [], action) => {
-  switch (action.type) {
-    case 'NEW_NOTE': {
-      state.push(action.payload)
-      return state
-    }
-    default: {
-      return state
-    }
-  }
-}
+import { noteReducer } from './reducer.js'
 
 const store = createStore(noteReducer)
 
