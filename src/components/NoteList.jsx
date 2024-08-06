@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 
 import { useDispatch, useSelector } from 'react-redux'
-import { toggleNoteImportance } from '../reducers/noteReducer.js'
+import { setNote } from '../reducers/noteReducer.js'
+import { updateNote } from '../services/notes.js'
 
 export function NoteList() {
   const notes = useSelector(({ notes, filter }) => {
@@ -38,8 +39,12 @@ function ToggleNoteImportance({ note }) {
 
   const label = note.important ? 'make not important' : 'make important'
 
-  function handleClick() {
-    dispatch(toggleNoteImportance(note.id))
+  async function handleClick() {
+    const updatedNote = await updateNote(note.id, {
+      ...note,
+      important: !note.important,
+    })
+    dispatch(setNote(updatedNote))
   }
 
   return <button onClick={handleClick}>{label}</button>

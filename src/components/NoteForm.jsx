@@ -1,17 +1,19 @@
 import { useDispatch } from 'react-redux'
-import { newNote } from '../reducers/noteReducer.js'
+import { appendNote } from '../reducers/noteReducer.js'
+import { createNote } from '../services/notes.js'
 
 export function NoteForm() {
   const dispatch = useDispatch()
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
 
     const form = event.target
     const formData = new FormData(form)
 
     const content = formData.get('content')?.toString()
-    dispatch(newNote(content))
+    const note = await createNote(content)
+    dispatch(appendNote(note))
 
     handleReset(form)
   }

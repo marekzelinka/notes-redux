@@ -4,7 +4,7 @@ const noteSlice = createSlice({
   name: 'notes',
   initialState: [],
   reducers: {
-    newNote: (state, action) => {
+    addNote: (state, action) => {
       state.push({
         content: action.payload,
         important: false,
@@ -23,6 +23,11 @@ const noteSlice = createSlice({
     appendNote: (state, action) => {
       state.push(action.payload)
     },
+    setNote: (state, action) => {
+      return state.map((note) =>
+        note.id !== action.payload.id ? note : action.payload,
+      )
+    },
     setNotes: (_state, action) => {
       return action.payload
     },
@@ -31,7 +36,7 @@ const noteSlice = createSlice({
 
 export const {
   reducer: noteReducer,
-  actions: { newNote, toggleNoteImportance, appendNote, setNotes },
+  actions: { addNote, toggleNoteImportance, appendNote, setNote, setNotes },
 } = noteSlice
 
 function generateId() {
